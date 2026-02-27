@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	file "github.com/Viperesss/taskmanager/readfile"
 	"github.com/Viperesss/taskmanager/task"
 	"github.com/Viperesss/taskmanager/utils"
 )
@@ -15,7 +14,7 @@ func Add() {
 
 }
 
-func Search() []task.Task {
+func Search(tList []task.Task) []task.Task {
 	var Tasks []task.Task
 
 	fmt.Print("Введите тег: ")
@@ -24,8 +23,7 @@ func Search() []task.Task {
 		log.Fatal(err)
 	}
 
-	tasks := file.ReadFile()
-	for _, task := range tasks {
+	for _, task := range tList {
 		for _, tags := range task.Meta.Tags {
 			if tags == input {
 				Tasks = append(Tasks, task)
