@@ -11,7 +11,7 @@ import (
 )
 
 func Add(tList *[]task.Task) {
-	counter := 1
+	counter := len(*tList) + 1
 	fmt.Println("Введите: Название заметки; теги(через запятую); приоритет от 1 до 5")
 	input, err := utils.StringReader()
 	if err != nil {

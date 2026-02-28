@@ -12,12 +12,11 @@ import (
 	"github.com/Viperesss/taskmanager/utils"
 )
 
-var counter int = 1
-
 // читаем файл
 func ReadFile(tList *[]task.Task) {
 	fmt.Println("\nЗаметка должна содержать следующий формат записи: Название заметки; теги; приоритет от 1 до 5")
 	for {
+		counter := len(*tList) + 1
 		fmt.Print("Введите название файла: ")
 
 		input, err := utils.StringReader()
