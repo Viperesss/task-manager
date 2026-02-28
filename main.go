@@ -31,10 +31,11 @@ func main() {
 
 		switch chose {
 		case 1:
-			cli.Add()
+			cli.Add(&TaskList)
+
 		case 2:
 			file.ReadFile(&TaskList)
-			fmt.Println("Заметки успешно добавлены")
+
 		case 3:
 			if len(TaskList) != 0 {
 				for _, task := range TaskList {

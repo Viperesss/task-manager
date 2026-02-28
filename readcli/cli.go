@@ -3,15 +3,41 @@ package cli
 import (
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/Viperesss/taskmanager/task"
 	"github.com/Viperesss/taskmanager/utils"
 )
 
-// Введите название, теги, приоритет
-func Add() {
-	fmt.Println("Введите: Название заметки; теги; приоритет от 1 до 5")
+func Add(tList *[]task.Task) {
+	counter := 1
+	fmt.Println("Введите: Название заметки; теги(через запятую); приоритет от 1 до 5")
+	input, err := utils.StringReader()
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	parts := strings.Split(input, ";")
+	noteName := parts[0]
+	noteTags := strings.Split(parts[1], ",")
+	notePriority, err := strconv.Atoi(parts[2])
+	if err != nil {
+		fmt.Printf("Ошибка при вводе уровня приоритета, %v", err)
+		return
+	}
+
+	newTask := task.Task{
+		ID:   counter,
+		Name: noteName,
+		Meta: task.Meta{
+			Tags:     noteTags,
+			Priority: notePriority,
+		},
+	}
+
+	*tList = append(*tList, newTask)
+	fmt.Println("Заметка успешно добавлена")
 }
 
 func Search(tList []task.Task) []task.Task {

@@ -54,6 +54,7 @@ func ReadFile(tList *[]task.Task) {
 			counter++
 
 		}
+		fmt.Println("Заметки из файла успешно добавлены")
 
 		err = file.Close() // Закрываем файл для экономии ресурсов, err один
 		if err != nil {
