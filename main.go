@@ -31,10 +31,18 @@ func main() {
 
 		switch chose {
 		case 1:
-			cli.Add(&TaskList)
+			err := cli.Add(&TaskList)
+			if err != nil {
+				fmt.Println(err)
+			}
+			continue
 
 		case 2:
-			file.ReadFile(&TaskList)
+			err := file.ReadFile(&TaskList)
+			if err != nil {
+				fmt.Println(err)
+			}
+			continue
 
 		case 3:
 			if len(TaskList) != 0 {
@@ -46,7 +54,11 @@ func main() {
 			}
 
 		case 4: // Поиск заметки по тегу
-			tasks := cli.Search(TaskList)
+			tasks, err := cli.Search(TaskList)
+			if err != nil {
+				fmt.Println(err)
+			}
+
 			for _, task := range tasks {
 				fmt.Printf("%v. %s, теги: %v, уровень приоритета - %v\n", task.ID, task.Name, task.Meta.Tags, task.Meta.Priority)
 			}

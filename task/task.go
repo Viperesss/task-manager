@@ -1,8 +1,10 @@
 package task
 
+type Priority int
+
 type Meta struct {
-	Tags     []string
-	Priority int // Важность от 1 до 5
+	Tags []string
+	Priority
 }
 
 // Сама задача
@@ -11,4 +13,9 @@ type Task struct {
 	Name string
 	Done bool
 	Meta Meta
+}
+
+// метод проверки корректности
+func (p Priority) IsCorrect() bool {
+	return p > 0 && p < 6
 }

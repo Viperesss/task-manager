@@ -2,7 +2,6 @@ package cli
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
@@ -10,12 +9,12 @@ import (
 	"github.com/Viperesss/taskmanager/utils"
 )
 
-func Add(tList *[]task.Task) {
+func Add(tList *[]task.Task) error {
 	counter := len(*tList) + 1
 	fmt.Println("Введите: Название заметки; теги(через запятую); приоритет от 1 до 5")
 	input, err := utils.StringReader()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	parts := strings.Split(input, ";")
@@ -23,30 +22,36 @@ func Add(tList *[]task.Task) {
 	noteTags := strings.Split(parts[1], ",")
 	notePriority, err := strconv.Atoi(parts[2])
 	if err != nil {
-		fmt.Printf("Ошибка при вводе уровня приоритета, %v", err)
-		return
+		fmt.Println("Ошибка при вводе уровня приоритета")
+		return err
 	}
 
-	newTask := task.Task{
-		ID:   counter,
-		Name: noteName,
-		Meta: task.Meta{
-			Tags:     noteTags,
-			Priority: notePriority,
-		},
-	}
+	priority := task.Priority(notePriority)
+	if priority.IsCorrect() {
+		newTask := task.Task{
+			ID:   counter,
+			Name: noteName,
+			Meta: task.Meta{
+				Tags:     noteTags,
+				Priority: priority,
+			},
+		}
 
-	*tList = append(*tList, newTask)
-	fmt.Println("Заметка успешно добавлена")
+		*tList = append(*tList, newTask)
+		fmt.Println("Заметка успешно добавлена")
+	} else {
+		return fmt.Errorf("Ошибка при получении уровня приоритета")
+	}
+	return nil
 }
 
-func Search(tList []task.Task) []task.Task {
+func Search(tList []task.Task) ([]task.Task, error) {
 	var Tasks []task.Task
 
 	fmt.Print("Введите тег: ")
 	input, err := utils.StringReader()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	for _, task := range tList {
@@ -56,5 +61,5 @@ func Search(tList []task.Task) []task.Task {
 			}
 		}
 	}
-	return Tasks
+	return Tasks, nil
 }
