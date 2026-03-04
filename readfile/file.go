@@ -12,11 +12,11 @@ import (
 )
 
 // читаем файл
-func ReadFile(tList *[]task.Task) error {
-	fmt.Println("\nЗаметка должна содержать следующий формат записи: Название заметки; теги; приоритет от 1 до 5")
-
-	counter := len(*tList) + 1
+func ReadFile() error {
 	lineCounter := 1
+	var newTask task.Task
+
+	fmt.Println("\nЗаметка должна содержать следующий формат записи: Название заметки; теги; приоритет от 1 до 5")
 	fmt.Print("Введите название файла: ")
 
 	input, err := utils.StringReader()
@@ -33,26 +33,15 @@ func ReadFile(tList *[]task.Task) error {
 	for scanner.Scan() { // Цикл работает до тех пор пока не прочитает все строки
 		parts := strings.Split(scanner.Text(), ";")
 		tags := strings.Split(parts[1], ",")
-		priorityIndex, err := strconv.Atoi(parts[2])
+		priority, err := strconv.Atoi(parts[2])
 		if err != nil {
 			return fmt.Errorf("Ошибка при получении уровня приоритета в %v строке\n Ошибка: %v", lineCounter, err)
 		}
-		priority := task.Priority(priorityIndex)
-		if priority.IsCorrect() {
-			task := task.Task{
-				ID:   counter,
-				Name: parts[0],
-				Meta: task.Meta{
-					Tags:     tags,
-					Priority: priority,
-				},
-			}
-			*tList = append(*tList, task)
-			counter++
-		} else {
-			return fmt.Errorf("Ошибка при получении уровня приоритета в %v строке\n", lineCounter)
+
+		err = newTask.AddTask(parts[0], tags, priority)
+		if err != nil {
+			return fmt.Errorf("Ошибка при создании новой заметки, строка: %v\nОшибка: %v", lineCounter, err)
 		}
-		lineCounter++
 	}
 	fmt.Println("Заметки из файла успешно добавлены")
 
@@ -64,5 +53,4 @@ func ReadFile(tList *[]task.Task) error {
 		return scanner.Err()
 	}
 	return nil
-
 }

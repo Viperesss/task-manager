@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-	var TaskList []task.Task
 	for {
 		fmt.Printf("\nВыберите опцию:\n")
 		fmt.Printf("1. Добавить заметку с помощью консоли\n")
@@ -31,43 +30,36 @@ func main() {
 
 		switch chose {
 		case 1:
-			err := cli.Add(&TaskList)
+			err := cli.ReadCli()
 			if err != nil {
 				fmt.Println(err)
 			}
 			continue
 
 		case 2:
-			err := file.ReadFile(&TaskList)
+			err := file.ReadFile()
 			if err != nil {
 				fmt.Println(err)
 			}
 			continue
 
 		case 3:
-			if len(TaskList) != 0 {
-				for _, task := range TaskList {
-					fmt.Printf("\n%v. %s, теги: %v, уровень приоритета - %v\n", task.ID, task.Name, task.Meta.Tags, task.Meta.Priority)
-				}
-			} else {
-				fmt.Println("Заметки отсутствуют")
-			}
+			task.ShowAll()
+			continue
 
 		case 4: // Поиск заметки по тегу
-			tasks, err := cli.Search(TaskList)
+			err := cli.Search()
 			if err != nil {
 				fmt.Println(err)
 			}
+			continue
 
-			for _, task := range tasks {
-				fmt.Printf("%v. %s, теги: %v, уровень приоритета - %v\n", task.ID, task.Name, task.Meta.Tags, task.Meta.Priority)
-			}
 		case 0:
 			return
+
 		default:
 			fmt.Println("Ошибка, введите цифру из предложенного списка")
 			continue
 		}
 	}
-
 }
